@@ -1,13 +1,13 @@
 package com.planetgallium.kitpvp.listener;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import com.planetgallium.kitpvp.Game;
+import com.planetgallium.kitpvp.game.Arena;
+import com.planetgallium.kitpvp.util.*;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -17,14 +17,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.planetgallium.kitpvp.Game;
-import com.planetgallium.kitpvp.game.Arena;
-import com.planetgallium.kitpvp.util.Config;
-import com.planetgallium.kitpvp.util.Resources;
-import com.planetgallium.kitpvp.util.Title;
-import com.planetgallium.kitpvp.util.Toolkit;
-import com.planetgallium.kitpvp.util.XSound;
 
 public class DeathListener implements Listener {
 	
@@ -144,6 +136,11 @@ public class DeathListener implements Listener {
 	}
 
 	private void setDeathMessage(Player victim, PlayerDeathEvent e) {
+
+		if (victim.getLastDamageCause() == null && victim.getKiller() != null) {
+			creditWithKill(victim, victim.getKiller());
+			return;
+		}
 
 		DamageCause cause = victim.getLastDamageCause().getCause();
 
