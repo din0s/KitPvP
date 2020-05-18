@@ -22,7 +22,7 @@ public class SoupListener implements Listener {
 		this.plugin = plugin;
 	}
 	
-	private int health = 6;
+	private int health = 8; // 4 hearts
 	
 	@EventHandler
 	public void onDamage(PlayerDeathEvent e) {
