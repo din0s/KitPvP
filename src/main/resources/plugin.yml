@@ -1,5 +1,5 @@
 name: KitPvP
-author: Cervinakuy
+authors: [Cervinakuy, din0s]
 main: com.planetgallium.kitpvp.Game
 version: 2.1.2
 description: The plugin you need to manage your KitPvP server.
