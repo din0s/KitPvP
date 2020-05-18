@@ -1,5 +1,14 @@
 package com.planetgallium.kitpvp;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import com.planetgallium.kitpvp.api.EventListener;
+import com.planetgallium.kitpvp.command.*;
+import com.planetgallium.kitpvp.game.Arena;
+import com.planetgallium.kitpvp.listener.*;
+import com.planetgallium.kitpvp.menu.KitMenu;
+import com.planetgallium.kitpvp.util.*;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,17 +18,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import com.planetgallium.kitpvp.api.EventListener;
-import com.planetgallium.kitpvp.command.*;
-import com.planetgallium.kitpvp.game.Arena;
-import com.planetgallium.kitpvp.listener.*;
-import com.planetgallium.kitpvp.menu.KitMenu;
-import com.planetgallium.kitpvp.util.*;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class Game extends JavaPlugin implements Listener {
 	
@@ -52,6 +50,7 @@ public class Game extends JavaPlugin implements Listener {
 		pm.registerEvents(new ArrowListener(), this);
 		pm.registerEvents(new DeathListener(this, arena, resources), this);
 		pm.registerEvents(new HitListener(this), this);
+		pm.registerEvents(new InventoryListener(this), this);
 		pm.registerEvents(new AttackListener(resources), this);
 		pm.registerEvents(new ItemListener(this, arena, resources), this);
 		pm.registerEvents(new SoupListener(this), this);
