@@ -5,6 +5,7 @@ import com.planetgallium.kitpvp.util.Config;
 import com.planetgallium.kitpvp.util.Toolkit;
 import com.planetgallium.kitpvp.util.XMaterial;
 import com.planetgallium.kitpvp.util.XSound;
+import org.bukkit.EntityEffect;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -100,6 +101,7 @@ public class SoupListener implements Listener {
 			        	
 			            p.setHealth(p.getHealth() + (double) health >= 20.0 ? 20.0 : p.getHealth() + (double) health);
 			            p.playSound(p.getLocation(), XSound.matchXSound(Config.getS("Soups.Sound")).get().parseSound(), 1, (float) Config.getI("Soups.Pitch"));
+			            p.playEffect(EntityEffect.WOLF_HEARTS);
 			            
 						if (Toolkit.getMainHandItem(p).getType() == XMaterial.MUSHROOM_STEW.parseMaterial()) {
 							
