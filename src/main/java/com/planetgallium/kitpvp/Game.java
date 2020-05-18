@@ -9,6 +9,7 @@ import com.planetgallium.kitpvp.listener.*;
 import com.planetgallium.kitpvp.menu.KitMenu;
 import com.planetgallium.kitpvp.util.*;
 import net.md_5.bungee.api.ChatColor;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,12 +17,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.logging.Logger;
 
 public class Game extends JavaPlugin implements Listener {
 	
 	private static Game instance;
+	private static Economy econ = null;
 	
 	private Arena arena;
 	private Database database;
@@ -103,7 +108,11 @@ public class Game extends JavaPlugin implements Listener {
 			new Placeholders(this).register();
 			hasPlaceholderAPI = true;
 		}
-		
+
+		if (!setupEconomy()) {
+			Logger.getLogger("Minecraft").warning("Vault not found!!! Economy aspect will be broken. You've been warned!");
+		}
+
 		Bukkit.getConsoleSender().sendMessage(Config.tr("&7[&b&lKIT-PVP&7] &aDone!"));
 		
 	}
@@ -113,6 +122,18 @@ public class Game extends JavaPlugin implements Listener {
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			database.saveAndRemovePlayer(all);
 		}
+	}
+
+	private boolean setupEconomy() {
+		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) {
+			return false;
+		}
+		econ = rsp.getProvider();
+		return econ != null;
 	}
 
 	private void checkUpdate() {
