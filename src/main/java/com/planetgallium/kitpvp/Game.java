@@ -138,6 +138,10 @@ public class Game extends JavaPlugin implements Listener {
 		return econ != null;
 	}
 
+	public static Economy getEconomy() {
+		return econ;
+	}
+
 	private void checkUpdate() {
 
 		Updater.of(this).resourceId(27107).handleResponse((versionResponse, version) -> {
