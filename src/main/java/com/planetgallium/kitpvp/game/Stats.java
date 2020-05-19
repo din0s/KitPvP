@@ -1,10 +1,10 @@
 package com.planetgallium.kitpvp.game;
 
-import java.util.UUID;
-
 import com.planetgallium.kitpvp.Game;
 import com.planetgallium.kitpvp.util.Resources;
 import com.planetgallium.kitpvp.util.Toolkit;
+
+import java.util.UUID;
 
 public class Stats {
 	
@@ -27,6 +27,7 @@ public class Stats {
 				resources.getStats().set("Stats.Players." + uuid + ".Experience", 0);
 				resources.getStats().set("Stats.Players." + uuid + ".Kills", 0);
 				resources.getStats().set("Stats.Players." + uuid + ".Deaths", 0);
+				resources.getStats().set("Stats.Players." + uuid + ".Soups", 0);
 				
 				resources.save();
 				
@@ -36,13 +37,53 @@ public class Stats {
 			
 			if (!game.getDatabase().getCache().containsKey(uuid) || game.getDatabase().getCache().get(uuid) == null) {
 				
-				PlayerData playerData = new PlayerData(username, 0, 0, 0, 0);
+				PlayerData playerData = new PlayerData(username, 0, 0, 0, 0, 0);
 				game.getDatabase().getCache().put(uuid, playerData);
 				
 			}
 			
 		}
 		
+	}
+
+	public void addSoup(UUID uuid) {
+
+		if (!game.getDatabase().isEnabled()) {
+
+			if (resources.getStats().contains("Stats.Players." + uuid + ".Soups")) {
+
+				resources.getStats().set("Stats.Players." + uuid + ".Soups", getSoups(uuid) + 1);
+				resources.save();
+
+			}
+
+		} else {
+
+			PlayerData playerData = game.getDatabase().getCache().get(uuid);
+			playerData.addSoup();
+
+		}
+
+	}
+
+	public void resetSoups(UUID uuid) {
+
+		if (!game.getDatabase().isEnabled()) {
+
+			if (resources.getStats().contains("Stats.Players." + uuid + ".Soups")) {
+
+				resources.getStats().set("Stats.Players." + uuid + ".Soups", 0);
+				resources.save();
+
+			}
+
+		} else {
+
+			PlayerData playerData = game.getDatabase().getCache().get(uuid);
+			playerData.resetSoups();
+
+		}
+
 	}
 	
 	public void addKill(UUID uuid) {
@@ -172,6 +213,27 @@ public class Stats {
 			
 		}
 		
+	}
+
+	public int getSoups(UUID uuid) {
+
+		if (!game.getDatabase().isEnabled()) {
+
+			if (resources.getStats().contains("Stats.Players." + uuid + ".Soups")) {
+
+				return resources.getStats().getInt("Stats.Players." + uuid + ".Soups");
+
+			}
+
+		} else {
+
+			PlayerData playerData = game.getDatabase().getCache().get(uuid);
+			return playerData.getSoups();
+
+		}
+
+		return 0;
+
 	}
 	
 	public int getKills(UUID uuid) {

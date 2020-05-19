@@ -1,17 +1,17 @@
 package com.planetgallium.kitpvp.util;
 
+import com.planetgallium.kitpvp.Game;
+import com.planetgallium.kitpvp.game.PlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import com.planetgallium.kitpvp.Game;
-import com.planetgallium.kitpvp.game.PlayerData;
 
 
 public class Database {
@@ -108,6 +108,7 @@ public class Database {
 					"EXPERIENCE INT(10)," +
 					"KILLS INT(10)," +
 					"DEATHS INT(10)" +
+					"SOUPS INT(10)" +
 					")";
 			
 			if (!isTableCreated) {
@@ -145,7 +146,8 @@ public class Database {
 	                int experience = result.getInt("EXPERIENCE");
 	                int kills = result.getInt("KILLS");
 	                int deaths = result.getInt("DEATHS");
-	                PlayerData playerData = new PlayerData(username, level, experience, kills, deaths);
+	                int soups = result.getInt("SOUPS");
+	                PlayerData playerData = new PlayerData(username, level, experience, kills, deaths, soups);
 	                
 	                cache.put(p.getUniqueId(), playerData);
 	                
@@ -155,13 +157,14 @@ public class Database {
 					
 					game.getArena().getStats().createPlayer(p.getName(), p.getUniqueId());
 					PreparedStatement stmt = connection.prepareStatement("INSERT INTO " + table +
-							" (UUID, USERNAME, LEVEL, EXPERIENCE, KILLS, DEATHS) VALUES (?, ?, ?, ?, ?, ?)");
+							" (UUID, USERNAME, LEVEL, EXPERIENCE, KILLS, DEATHS, SOUPS) VALUES (?, ?, ?, ?, ?, ?, ?)");
 					stmt.setString(1, p.getUniqueId().toString());
 					stmt.setString(2, p.getName());
 					stmt.setInt(3, 0);
 					stmt.setInt(4, 0);
 					stmt.setInt(5, 0);
 					stmt.setInt(6, 0);
+					stmt.setInt(7, 0);
 					stmt.executeUpdate();
 					
 				}
@@ -185,13 +188,14 @@ public class Database {
 			try {
 
 				PreparedStatement statement = connection.prepareStatement("UPDATE " + table +
-						" SET USERNAME=?, LEVEL=?, EXPERIENCE=?, KILLS=?, DEATHS=? WHERE UUID=?");
+						" SET USERNAME=?, LEVEL=?, EXPERIENCE=?, KILLS=?, DEATHS=?, SOUPS=? WHERE UUID=?");
 				statement.setString(1, playerData.getUsername());
 				statement.setInt(2, playerData.getLevel());
 				statement.setInt(3, playerData.getExperience());
 				statement.setInt(4, playerData.getKills());
 				statement.setInt(5, playerData.getDeaths());
-				statement.setString(6, p.getUniqueId().toString());
+				statement.setInt(6, playerData.getSoups());
+				statement.setString(7, p.getUniqueId().toString());
 				statement.executeUpdate();
 
 			} catch (SQLException e) {
@@ -233,6 +237,7 @@ public class Database {
 			resources.getStats().set("Stats.Players." + uuid + ".Experience", playerData.getExperience());
 			resources.getStats().set("Stats.Players." + uuid + ".Kills", playerData.getKills());
 			resources.getStats().set("Stats.Players." + uuid + ".Deaths", playerData.getDeaths());
+			resources.getStats().set("Stats.Players." + uuid + ".Soups", playerData.getSoups());
 
 			resources.save();
 			
@@ -262,17 +267,19 @@ public class Database {
 			int experience = resources.getStats().getInt("Stats.Players." + uuid + ".Experience");
 			int kills = resources.getStats().getInt("Stats.Players." + uuid + ".Kills");
 			int deaths = resources.getStats().getInt("Stats.Players." + uuid + ".Deaths");
+			int soups = resources.getStats().getInt("Stats.Players." + uuid + ".Soups");
 
 			try {
 				
-				PreparedStatement stmt = connection.prepareStatement("INSERT INTO " + table + " (UUID, USERNAME, LEVEL, EXPERIENCE, KILLS, DEATHS)" +
-						" VALUES (?, ?, ?, ?, ?, ?)");
+				PreparedStatement stmt = connection.prepareStatement("INSERT INTO " + table + " (UUID, USERNAME, LEVEL, EXPERIENCE, KILLS, DEATHS, SOUPS)" +
+						" VALUES (?, ?, ?, ?, ?, ?, ?)");
 				stmt.setString(1, uuid);
 				stmt.setString(2, username);
 				stmt.setInt(3, level);
 				stmt.setInt(4, experience);
 				stmt.setInt(5, kills);
 				stmt.setInt(6, deaths);
+				stmt.setInt(7, soups);
 				stmt.executeUpdate();
 				
 			} catch (SQLException e) {

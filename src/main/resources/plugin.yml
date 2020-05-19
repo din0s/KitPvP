@@ -19,3 +19,5 @@ commands:
      description: View all available kits.
    cstats:
      description: View your stats.
+   soup:
+     description: Fills your inventory with soup.

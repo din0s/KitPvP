@@ -47,6 +47,7 @@ public class DeathListener implements Listener {
 			respawnPlayer(victim);
 
 			arena.getStats().addDeath(victim.getUniqueId());
+			arena.getStats().resetSoups(victim.getUniqueId());
 			arena.getLevels().removeExperience(victim, resources.getLevels().getInt("Levels.General.Experience.Death"));
 
 			victim.getWorld().playEffect(victim.getLocation().add(0.0D, 1.0D, 0.0D), Effect.STEP_SOUND, 152);
