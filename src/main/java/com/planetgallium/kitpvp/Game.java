@@ -78,6 +78,7 @@ public class Game extends JavaPlugin implements Listener {
 	    getCommand("ckits").setExecutor(new KitsCommand());
 	    getCommand("cstats").setExecutor(new StatsCommand());
 	    getCommand("soup").setExecutor(new SoupCommand(econ, arena, resources));
+	    getCommand("repair").setExecutor(new RepairCommand(arena, resources));
 	    
 		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&b&lKIT-PVP&7] &7Enabling &bKitPvP &7version &b" + this.getDescription().getVersion() + "&7..."));
 		

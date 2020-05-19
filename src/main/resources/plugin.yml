@@ -21,3 +21,5 @@ commands:
      description: View your stats.
    soup:
      description: Fills your inventory with soup.
+   repair:
+     description: Repairs your weapons and armor.
