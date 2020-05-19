@@ -22,8 +22,9 @@ Messages:
     Cleared: '%prefix% &7Your kit has been cleared.'
     ClearedOther: '%prefix% &7You cleared &b%player%''s &7kit.'
     Soup: '%prefix% &7You paid $%amount%. Enjoy your soup!'
+    Repair: '%prefix% &7I have repaired your weapons and armor for you!'
   Other:
-    Payout: '%prefix &7You earned $%amount% for your kill.'
+    Payout: '%prefix% &7You earned $%amount% for your kill.'
     Needed: '%prefix% &cYou must be Level %level% to use that kit.'
     Level: '%prefix% &7Congratulations! You are now &bLevel %level%&7.'
     Sign: '%prefix% &7You have successfully created a sign.'
@@ -45,8 +46,9 @@ Messages:
     KitInvalid: '%prefix% &cYou cannot perform this action because you have a kit selected.'
     Cooldown: '%prefix% &cYou cannot select this kit for another %cooldown%.'
     Offline: '%prefix% &cThe specified player is not online or not in an arena.'
-    SoupCooldown: '%prefix &cYou can only replenish your soups every %mins% minutes.'
+    SoupCooldown: '%prefix% &cYou can only replenish your soups every %mins% minutes.'
     Balance: '%prefix% &cYou do not have enough money to do that. (required: $%amount%)'
+    FullInv: '%prefix% &cYour inventory is full.'
     NoKit: '%prefix% &cYou must have a kit selected to do that.'
   Stats:
     Message:
