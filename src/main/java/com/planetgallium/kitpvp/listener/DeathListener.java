@@ -226,7 +226,7 @@ public class DeathListener implements Listener {
 			arena.getStats().addKill(killer.getUniqueId());
 			arena.getLevels().addExperience(killer, resources.getLevels().getInt("Levels.General.Experience.Kill"));
 			econ.depositPlayer(killer, payout);
-			killer.sendMessage(resources.getMessages().getString("Messages.Other.Payout").replace("%amount%", String.valueOf(payout)));
+			killer.sendMessage(resources.getMessages().getString("Messages.Other.Payout").replace("%player%", victim.getName()).replace("%amount%", String.valueOf(payout)));
 
 			arena.getStats().addKill(killer.getUniqueId());
 			arena.getLevels().addExperience(killer, resources.getLevels().getInt("Levels.General.Experience.Kill"));
