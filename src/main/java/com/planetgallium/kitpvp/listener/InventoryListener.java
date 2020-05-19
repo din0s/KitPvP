@@ -6,9 +6,12 @@ import com.planetgallium.kitpvp.util.Toolkit;
 import com.planetgallium.kitpvp.util.XMaterial;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -20,29 +23,43 @@ public class InventoryListener implements Listener {
         this.config = plugin.getConfig();
     }
 
-    @EventHandler
-    public void onKitsItem(InventoryMoveItemEvent e) {
+    private void checkAndCancel(Cancellable e, ItemStack item) {
 
-        Player p = (Player) e.getSource().getHolder();
+        ItemMeta meta = item.getItemMeta();
 
-        if (Toolkit.inArena(p)) {
+        // Ugly code stolen from ItemListener#onInteract()
+        if (item.getType() == XMaterial.matchXMaterial(config.getString("Items.Kits.Item")).get().parseMaterial()) {
 
-            ItemStack item = Toolkit.getMainHandItem(p);
-            ItemMeta meta = item.getItemMeta();
+            if (meta.getDisplayName().equals(Config.getS("Items.Kits.Name"))) {
 
-            // Ugly code stolen from ItemListener#onInteract()
-
-            if (item.getType() == XMaterial.matchXMaterial(config.getString("Items.Kits.Item")).get().parseMaterial()) {
-
-                if (meta.getDisplayName().equals(Config.getS("Items.Kits.Name"))) {
-
-                    e.setCancelled(true);
-
-                }
+                e.setCancelled(true);
 
             }
 
         }
+
+    }
+
+
+    @EventHandler
+    public void onKitsClick(InventoryClickEvent e) {
+
+        InventoryHolder holder = e.getInventory().getHolder();
+
+        if (holder instanceof Player) { // I don't know what else it could be but ye
+
+            ItemStack item = Toolkit.getMainHandItem((Player) holder);
+            checkAndCancel(e, item);
+
+        }
+
+    }
+
+    @EventHandler
+    public void onKitsDrop(PlayerDropItemEvent e) {
+
+        ItemStack item = e.getItemDrop().getItemStack();
+        checkAndCancel(e, item);
 
     }
 
