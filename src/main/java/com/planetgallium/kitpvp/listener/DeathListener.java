@@ -3,6 +3,7 @@ package com.planetgallium.kitpvp.listener;
 import com.planetgallium.kitpvp.Game;
 import com.planetgallium.kitpvp.game.Arena;
 import com.planetgallium.kitpvp.util.*;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -18,17 +19,27 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Random;
+
 public class DeathListener implements Listener {
 	
 	private Title title = new Title();
 	private Arena arena;
 	private FileConfiguration config;
 	private Resources resources;
+	private Economy econ;
+	private Random r;
+
+	private static final int MIN_PAYOUT = 3;
+	private static final int MAX_PAYOUT = 5;
+	private static final int PAYOUT_GAP = MAX_PAYOUT - MIN_PAYOUT;
 	
 	public DeathListener(Game plugin, Arena arena, Resources resources) {
 		this.arena = arena;
 		this.config = plugin.getConfig();
 		this.resources = resources;
+		this.econ = plugin.getEconomy();
+		this.r = new Random();
 	}
 	
 	@EventHandler
@@ -204,6 +215,12 @@ public class DeathListener implements Listener {
 	private void creditWithKill(Player victim, Player killer) {
 
 		if (victim.getName() != killer.getName()) {
+
+			int payout = r.nextInt(PAYOUT_GAP) + MIN_PAYOUT;
+			arena.getStats().addKill(killer.getUniqueId());
+			arena.getLevels().addExperience(killer, resources.getLevels().getInt("Levels.General.Experience.Kill"));
+			econ.depositPlayer(killer, payout);
+			killer.sendMessage(resources.getMessages().getString("Messages.Other.Payout").replace("%amount%", String.valueOf(payout)));
 
 			arena.getStats().addKill(killer.getUniqueId());
 			arena.getLevels().addExperience(killer, resources.getLevels().getInt("Levels.General.Experience.Kill"));
