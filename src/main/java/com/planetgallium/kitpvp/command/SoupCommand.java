@@ -55,28 +55,41 @@ public class SoupCommand implements CommandExecutor {
 
                         if (arena.getKits().hasKit(p.getName())) {
 
-                            int soups = arena.getStats().getSoups(p.getUniqueId());
-                            int cost = BASE_COST + soups * EXTRA_COST;
+                            int count = 0;
+                            for (int i = 0; i < 36; i++) {
+                                // Code stolen from SoupListener#onDamage()
+                                if (p.getInventory().getItem(i) == null) {
+                                    count++;
+                                }
+                            }
 
-                            if (econ.has(p, cost)) {
+                            if (count != 0) {
 
-                                ItemStack soup = new ItemStack(XMaterial.MUSHROOM_STEW.parseItem());
+                                int soups = arena.getStats().getSoups(p.getUniqueId());
+                                int cost = BASE_COST + soups * EXTRA_COST;
 
-                                for (int i = 0; i < 36; i++) {
-                                    // Code stolen from SoupListener#onDamage()
-                                    if (p.getInventory().getItem(i) == null) {
+                                if (econ.has(p, cost)) {
+
+                                    ItemStack soup = new ItemStack(XMaterial.MUSHROOM_STEW.parseItem());
+
+                                    for (int i = 0; i < count; i++) {
                                         p.getInventory().addItem(soup);
                                     }
-                                }
 
-                                econ.withdrawPlayer(p, cost);
-                                arena.getStats().addSoup(p.getUniqueId());
-                                cooldowns.put(p.getUniqueId(), System.currentTimeMillis());
-                                sender.sendMessage(resources.getMessages().getString("Messages.Commands.Soup").replace("%amount%", String.valueOf(cost)));
+                                    econ.withdrawPlayer(p, cost);
+                                    arena.getStats().addSoup(p.getUniqueId());
+                                    cooldowns.put(p.getUniqueId(), System.currentTimeMillis());
+                                    sender.sendMessage(resources.getMessages().getString("Messages.Commands.Soup").replace("%amount%", String.valueOf(cost)));
+
+                                } else {
+
+                                    sender.sendMessage(resources.getMessages().getString("Messages.Error.Balance").replace("%amount%", String.valueOf(cost)));
+
+                                }
 
                             } else {
 
-                                sender.sendMessage(resources.getMessages().getString("Messages.Error.Balance").replace("%amount%", String.valueOf(cost)));
+                                sender.sendMessage(resources.getMessages().getString("Messages.Error.FullInv"));
 
                             }
 
