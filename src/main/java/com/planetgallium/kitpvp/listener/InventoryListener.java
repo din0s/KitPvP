@@ -2,7 +2,6 @@ package com.planetgallium.kitpvp.listener;
 
 import com.planetgallium.kitpvp.Game;
 import com.planetgallium.kitpvp.util.Config;
-import com.planetgallium.kitpvp.util.Toolkit;
 import com.planetgallium.kitpvp.util.XMaterial;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -48,8 +47,13 @@ public class InventoryListener implements Listener {
 
         if (holder instanceof Player) { // I don't know what else it could be but ye
 
-            ItemStack item = Toolkit.getMainHandItem((Player) holder);
-            checkAndCancel(e, item);
+            ItemStack item = e.getCurrentItem();
+
+            if (item != null) {
+
+                checkAndCancel(e, item);
+
+            }
 
         }
 
@@ -58,8 +62,8 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onKitsDrop(PlayerDropItemEvent e) {
 
-        ItemStack item = e.getItemDrop().getItemStack();
-        checkAndCancel(e, item);
+//        ItemStack item = e.getItemDrop().getItemStack();
+//        checkAndCancel(e, item);
 
     }
 
