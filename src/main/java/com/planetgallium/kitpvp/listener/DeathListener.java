@@ -214,7 +214,11 @@ public class DeathListener implements Listener {
 
 	private void creditWithKill(Player victim, Player killer) {
 
-		if (victim.getName() != killer.getName()) {
+		if (killer == null) {
+			return;
+		}
+
+		if (!victim.getName().equals(killer.getName())) {
 
 			int payout = r.nextInt(PAYOUT_GAP) + MIN_PAYOUT;
 			arena.getStats().addKill(killer.getUniqueId());
