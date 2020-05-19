@@ -1,5 +1,6 @@
 package com.planetgallium.kitpvp.listener;
 
+import com.planetgallium.kitpvp.game.SoupCooldowns;
 import com.planetgallium.kitpvp.util.Toolkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,6 +29,8 @@ public class LeaveListener implements Listener {
 
 			Game.getInstance().getArena().deletePlayer(p);
 			game.getDatabase().saveAndRemovePlayer(p);
+			Game.getInstance().getArena().getStats().resetSoups(p.getUniqueId());
+			SoupCooldowns.reset(p);
 
 		}
 		

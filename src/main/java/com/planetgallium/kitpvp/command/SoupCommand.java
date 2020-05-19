@@ -1,6 +1,7 @@
 package com.planetgallium.kitpvp.command;
 
 import com.planetgallium.kitpvp.game.Arena;
+import com.planetgallium.kitpvp.game.SoupCooldowns;
 import com.planetgallium.kitpvp.util.Resources;
 import com.planetgallium.kitpvp.util.Toolkit;
 import com.planetgallium.kitpvp.util.XMaterial;
@@ -11,27 +12,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 public class SoupCommand implements CommandExecutor {
 
     private Economy econ;
     private Arena arena;
     private Resources resources;
-    private Map<UUID, Long> cooldowns;
 
     private static final int BASE_COST = 20;
     private static final int EXTRA_COST = 10;
-    private static final int COOLDOWN_MINS = 5;
-    private static final long COOLDOWN_MILLIS = 1000 * 60 * COOLDOWN_MINS;
 
     public SoupCommand(Economy econ, Arena arena, Resources resources) {
         this.econ = econ;
         this.arena = arena;
         this.resources = resources;
-        this.cooldowns = new HashMap<>();
     }
 
     @Override
@@ -45,11 +38,9 @@ public class SoupCommand implements CommandExecutor {
 
                 if (Toolkit.inArena(p)) {
 
-                    Long lastUse = cooldowns.get(p.getUniqueId());
+                    if (SoupCooldowns.isOnCooldown(p)) {
 
-                    if (lastUse != null && System.currentTimeMillis() - lastUse < COOLDOWN_MILLIS) {
-
-                        sender.sendMessage(resources.getMessages().getString("Messages.Error.SoupCooldown").replace("%mins%", String.valueOf(COOLDOWN_MINS)));
+                        sender.sendMessage(resources.getMessages().getString("Messages.Error.SoupCooldown").replace("%mins%", String.valueOf(SoupCooldowns.COOLDOWN_MINS)));
 
                     } else {
 
@@ -78,7 +69,7 @@ public class SoupCommand implements CommandExecutor {
 
                                     econ.withdrawPlayer(p, cost);
                                     arena.getStats().addSoup(p.getUniqueId());
-                                    cooldowns.put(p.getUniqueId(), System.currentTimeMillis());
+                                    SoupCooldowns.add(p);
                                     sender.sendMessage(resources.getMessages().getString("Messages.Commands.Soup").replace("%amount%", String.valueOf(cost)));
 
                                 } else {

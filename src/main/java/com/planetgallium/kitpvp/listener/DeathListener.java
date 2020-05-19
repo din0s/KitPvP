@@ -2,6 +2,7 @@ package com.planetgallium.kitpvp.listener;
 
 import com.planetgallium.kitpvp.Game;
 import com.planetgallium.kitpvp.game.Arena;
+import com.planetgallium.kitpvp.game.SoupCooldowns;
 import com.planetgallium.kitpvp.util.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
@@ -59,6 +60,7 @@ public class DeathListener implements Listener {
 
 			arena.getStats().addDeath(victim.getUniqueId());
 			arena.getStats().resetSoups(victim.getUniqueId());
+			SoupCooldowns.reset(victim);
 			arena.getLevels().removeExperience(victim, resources.getLevels().getInt("Levels.General.Experience.Death"));
 
 			victim.getWorld().playEffect(victim.getLocation().add(0.0D, 1.0D, 0.0D), Effect.STEP_SOUND, 152);
