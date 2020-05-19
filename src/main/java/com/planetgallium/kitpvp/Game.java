@@ -45,6 +45,10 @@ public class Game extends JavaPlugin implements Listener {
 		resources.load();
 		database = new Database(this, "Storage.MySQL");
 		arena = new Arena(this, resources);
+
+		if (!setupEconomy()) {
+			Logger.getLogger("Minecraft").warning("Vault not found!!! Economy aspect will be broken. You've been warned!");
+		}
 		
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(this, this);
@@ -109,10 +113,6 @@ public class Game extends JavaPlugin implements Listener {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "[&b&lKIT-PVP&7] &7Discovered &bPlaceholderAPI&7, now hooking into it."));
 			new Placeholders(this).register();
 			hasPlaceholderAPI = true;
-		}
-
-		if (!setupEconomy()) {
-			Logger.getLogger("Minecraft").warning("Vault not found!!! Economy aspect will be broken. You've been warned!");
 		}
 
 		Bukkit.getConsoleSender().sendMessage(Config.tr("&7[&b&lKIT-PVP&7] &aDone!"));
