@@ -344,15 +344,19 @@ public class MainCommand implements CommandExecutor {
 
                 } else if (args[0].equalsIgnoreCase("addspawn") && hasPermission(p, "kp.command.addspawn")) {
 
-                    Config.getC().set("Arenas.Spawn." + p.getLocation().getWorld().getName() + ".World", p.getLocation().getWorld().getName());
-                    Config.getC().set("Arenas.Spawn." + p.getLocation().getWorld().getName() + ".X", p.getLocation().getBlockX());
-                    Config.getC().set("Arenas.Spawn." + p.getLocation().getWorld().getName() + ".Y", p.getLocation().getBlockY());
-                    Config.getC().set("Arenas.Spawn." + p.getLocation().getWorld().getName() + ".Z", p.getLocation().getBlockZ());
-                    Config.getC().set("Arenas.Spawn." + p.getLocation().getWorld().getName() + ".Yaw", Float.valueOf(p.getLocation().getYaw()));
-                    Config.getC().set("Arenas.Spawn." + p.getLocation().getWorld().getName() + ".Pitch", Float.valueOf(p.getLocation().getPitch()));
+                    ConfigurationSection section = Config.getC().getConfigurationSection("Arenas.Spawn." + p.getWorld().getName());
+                    int spawnCount = Config.getC().contains("Arenas.Spawn." + p.getWorld().getName()) ? section.getKeys(false).size() : 0;
+                    String configPrefix = "Arenas.Spawn." + p.getWorld().getName() + "." + spawnCount;
+
+                    Config.getC().set(configPrefix + ".World", p.getWorld().getName());
+                    Config.getC().set(configPrefix + ".X", p.getLocation().getBlockX());
+                    Config.getC().set(configPrefix + ".Y", p.getLocation().getBlockY());
+                    Config.getC().set(configPrefix + ".Z", p.getLocation().getBlockZ());
+                    Config.getC().set(configPrefix + ".Yaw", Float.valueOf(p.getLocation().getYaw()));
+                    Config.getC().set(configPrefix + ".Pitch", Float.valueOf(p.getLocation().getPitch()));
                     game.saveConfig();
 
-                    p.sendMessage(resources.getMessages().getString("Messages.Commands.Added").replace("%arena%", p.getLocation().getWorld().getName()));
+                    p.sendMessage(resources.getMessages().getString("Messages.Commands.Added").replace("%index%", String.valueOf(spawnCount)).replace("%arena%", p.getLocation().getWorld().getName()));
                     XSound.playSoundFromString(p, "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, 1, 1");
 
                     return true;
@@ -362,16 +366,24 @@ public class MainCommand implements CommandExecutor {
                     if (Config.getC().contains("Arenas.Spawn." + p.getWorld().getName())) {
 
                         ConfigurationSection section = Config.getC().getConfigurationSection("Arenas.Spawn");
+                        ConfigurationSection subsection = Config.getC().getConfigurationSection("Arenas.Spawn." + p.getWorld().getName());
 
-                        if (section.getKeys(false).size() == 1) {
+                        int spawnCount = 0;
+                        if (section.getKeys(false).size() == 1 && subsection.getKeys(false).size() == 1) {
                             Config.getC().set("Arenas", null);
                             game.saveConfig();
                         } else {
-                            Config.getC().set("Arenas.Spawn." + p.getWorld().getName(), null);
-                            game.saveConfig();
+                            spawnCount = subsection.getKeys(false).size();
+                            if (spawnCount == 1) {
+                                Config.getC().set("Arenas.Spawn." + p.getWorld().getName(), null);
+                                game.saveConfig();
+                            } else {
+                                Config.getC().set("Arenas.Spawn."+ p.getWorld().getName() + (spawnCount - 1), null);
+                                game.saveConfig();
+                            }
                         }
 
-                        p.sendMessage(resources.getMessages().getString("Messages.Commands.Removed").replace("%arena%", p.getLocation().getWorld().getName()));
+                        p.sendMessage(resources.getMessages().getString("Messages.Commands.Removed").replace("%index%", String.valueOf(spawnCount)).replace("%arena%", p.getLocation().getWorld().getName()));
                         XSound.playSoundFromString(p, "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, 1, 1");
 
                         return true;

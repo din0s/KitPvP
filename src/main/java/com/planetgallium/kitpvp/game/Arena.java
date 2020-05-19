@@ -1,28 +1,24 @@
 package com.planetgallium.kitpvp.game;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.planetgallium.kitpvp.Game;
+import com.planetgallium.kitpvp.util.Config;
+import com.planetgallium.kitpvp.util.Resources;
+import com.planetgallium.kitpvp.util.XMaterial;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.planetgallium.kitpvp.Game;
-import com.planetgallium.kitpvp.util.Config;
-import com.planetgallium.kitpvp.util.Resources;
-import com.planetgallium.kitpvp.util.XMaterial;
-
-import me.clip.placeholderapi.PlaceholderAPI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class Arena {
 
@@ -38,6 +34,7 @@ public class Arena {
 	private KillStreaks killstreaks;
 	private Levels levels;
 	private Cooldowns cooldowns;
+	private Random r;
 	
 	public Arena(Game plugin, Resources resources) {
 
@@ -53,7 +50,8 @@ public class Arena {
 		this.killstreaks = new KillStreaks(resources);
 		this.levels = new Levels(this, resources);
 		this.cooldowns = new Cooldowns(this, resources);
-		
+		this.r = new Random();
+
 	}
 	
 	public void addPlayer(Player p) {
@@ -157,13 +155,16 @@ public class Arena {
 	public void toSpawn(Player p) {
 		
 		if (config.contains("Arenas.Spawn." + p.getWorld().getName())) {
+
+			int spawnCount = Config.getC().getConfigurationSection("Arenas.Spawn." + p.getWorld().getName()).getKeys(false).size();
+			String configPrefix = "Arenas.Spawn." + p.getWorld().getName() + "." + r.nextInt(spawnCount);
 			
-			Location spawn = new Location(Bukkit.getWorld(config.getString("Arenas.Spawn." + p.getWorld().getName() + ".World")),
-					config.getInt("Arenas.Spawn." + p.getWorld().getName() + ".X") + 0.5,
-					config.getInt("Arenas.Spawn." + p.getWorld().getName() + ".Y"),
-					config.getInt("Arenas.Spawn." + p.getWorld().getName() + ".Z") + 0.5,
-					(float) config.getDouble("Arenas.Spawn." + p.getWorld().getName() + ".Yaw"),
-					(float) config.getDouble("Arenas.Spawn." + p.getWorld().getName() + ".Pitch"));
+			Location spawn = new Location(Bukkit.getWorld(config.getString(configPrefix + ".World")),
+					config.getInt(configPrefix + ".X") + 0.5,
+					config.getInt(configPrefix + ".Y"),
+					config.getInt(configPrefix + ".Z") + 0.5,
+					(float) config.getDouble(configPrefix + ".Yaw"),
+					(float) config.getDouble(configPrefix + ".Pitch"));
 			
 			p.teleport(spawn);
 			
