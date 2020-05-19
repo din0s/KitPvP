@@ -8,8 +8,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class RepairCommand implements CommandExecutor {
 
@@ -36,15 +34,19 @@ public class RepairCommand implements CommandExecutor {
 
                         for (int i = 0; i < 36; i++) {
                             ItemStack item = p.getInventory().getItem(i);
-                            if (item != null) {
-                                // https://www.spigotmc.org/threads/1-14-how-to-set-item-durability.390411/
-                                ItemMeta meta = item.getItemMeta();
-                                if (meta instanceof Damageable) {
-                                    ((Damageable) meta).setDamage(0);
-                                    item.setItemMeta(meta);
-                                }
+                            if (item != null && item.getDurability() > 0) {
+                                item.setDurability((short) 0);
                             }
                         }
+
+                        for (ItemStack item : p.getInventory().getArmorContents()) {
+                            if (item != null && item.getDurability() > 0) {
+                                item.setDurability((short) 0);
+                            }
+                        }
+
+                        p.updateInventory();
+                        sender.sendMessage(resources.getMessages().getString("Messages.Commands.Repair"));
 
                     } else {
 
