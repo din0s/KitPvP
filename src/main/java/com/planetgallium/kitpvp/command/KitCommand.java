@@ -1,11 +1,10 @@
 package com.planetgallium.kitpvp.command;
 
+import com.planetgallium.kitpvp.util.Resources;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.planetgallium.kitpvp.util.Config;
-import com.planetgallium.kitpvp.util.Resources;
 
 public class KitCommand implements CommandExecutor {
 
@@ -25,8 +24,8 @@ public class KitCommand implements CommandExecutor {
 				Player p = (Player) sender;
 					
 				if (args.length == 0) {
-					
-					p.sendMessage(Config.tr(resources.getMessages().getString("Messages.Error.Arguments")));
+
+					p.performCommand("kp menu");
 					return true;
 					
 				} else if (args.length == 1) {
