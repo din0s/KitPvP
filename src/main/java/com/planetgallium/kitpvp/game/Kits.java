@@ -1,35 +1,24 @@
 package com.planetgallium.kitpvp.game;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.planetgallium.kitpvp.Game;
+import com.planetgallium.kitpvp.api.PlayerSelectKitEvent;
+import com.planetgallium.kitpvp.item.KitItem;
+import com.planetgallium.kitpvp.kit.Kit;
+import com.planetgallium.kitpvp.kit.KitEffect;
+import com.planetgallium.kitpvp.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
-import com.planetgallium.kitpvp.Game;
-import com.planetgallium.kitpvp.api.PlayerSelectKitEvent;
-import com.planetgallium.kitpvp.kit.KitEffect;
-import com.planetgallium.kitpvp.item.KitItem;
-import com.planetgallium.kitpvp.kit.Kit;
-import com.planetgallium.kitpvp.util.Config;
-import com.planetgallium.kitpvp.util.XMaterial;
-import com.planetgallium.kitpvp.util.Resource;
-import com.planetgallium.kitpvp.util.Resources;
-import com.planetgallium.kitpvp.util.Toolkit;
+
+import java.io.File;
+import java.util.*;
 
 @SuppressWarnings("deprecation")
 public class Kits {
@@ -38,9 +27,9 @@ public class Kits {
 	private Arena arena;
 	private Resources resources;
 	
-	public Kits(Game plugin, Resources resources) {
+	public Kits(Game plugin, Arena arena, Resources resources) {
 		this.plugin = plugin;
-		this.arena = plugin.getArena();
+		this.arena = arena;
 		this.resources = resources;
 	}
 	

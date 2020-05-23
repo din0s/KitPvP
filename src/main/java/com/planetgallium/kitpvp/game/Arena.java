@@ -46,7 +46,7 @@ public class Arena {
 		this.hitCache = new HashMap<String, String>();
 		
 		this.stats = new Stats(plugin, resources);
-		this.kits = new Kits(plugin, resources);
+		this.kits = new Kits(plugin, this, resources);
 		this.killstreaks = new KillStreaks(resources);
 		this.levels = new Levels(this, resources);
 		this.cooldowns = new Cooldowns(this, resources);
