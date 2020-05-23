@@ -23,6 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainCommand implements CommandExecutor {
 
@@ -33,11 +34,13 @@ public class MainCommand implements CommandExecutor {
     private Game game;
     private Arena arena;
     private Resources resources;
+    private Random r;
 
     public MainCommand(Game game, Arena arena, Resources resources) {
         this.game = game;
         this.arena = arena;
         this.resources = resources;
+        this.r = new Random();
     }
 
     @Override
@@ -403,14 +406,17 @@ public class MainCommand implements CommandExecutor {
 
                     String arena = args[1];
 
-                    if (Config.getC().contains("Arenas.Spawn." + arena)) {
+                    if (Config.getC().contains("Arenas.Spawn." + arena + ".0")) {
 
                         if (!game.getArena().getKits().hasKit(p.getName())) {
 
-                            Location spawn = new Location(Bukkit.getWorld(Config.getS("Arenas.Spawn." + arena + ".World")),
-                                    Config.getI("Arenas.Spawn." + arena + ".X"),
-                                    Config.getI("Arenas.Spawn." + arena + ".Y"),
-                                    Config.getI("Arenas.Spawn." + arena + ".Z"));
+                            int spawnCount = Config.getC().getConfigurationSection("Arenas.Spawn." + arena).getKeys(false).size();
+                            String configPrefix = "Arenas.Spawn." + arena + "." + r.nextInt(spawnCount);
+
+                            Location spawn = new Location(Bukkit.getWorld(Config.getS(configPrefix + ".World")),
+                                    Config.getI(configPrefix + ".X"),
+                                    Config.getI(configPrefix + ".Y"),
+                                    Config.getI(configPrefix + ".Z"));
 
                             p.teleport(spawn);
                             p.sendMessage(resources.getMessages().getString("Messages.Commands.Teleport"));
