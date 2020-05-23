@@ -76,7 +76,7 @@ public class Arena {
 		
 		p.setExp(0f);
 		p.setFoodLevel(20);
-		
+
 		giveItems(p);
 		toSpawn(p);
 		
@@ -151,22 +151,26 @@ public class Arena {
 		}
 		
 	}
+
+	public Location getRandomSpawn(Player p) {
+
+		int spawnCount = Config.getC().getConfigurationSection("Arenas.Spawn." + p.getWorld().getName()).getKeys(false).size();
+		String configPrefix = "Arenas.Spawn." + p.getWorld().getName() + "." + r.nextInt(spawnCount);
+
+		return new Location(Bukkit.getWorld(config.getString(configPrefix + ".World")),
+				config.getInt(configPrefix + ".X") + 0.5,
+				config.getInt(configPrefix + ".Y"),
+				config.getInt(configPrefix + ".Z") + 0.5,
+				(float) config.getDouble(configPrefix + ".Yaw"),
+				(float) config.getDouble(configPrefix + ".Pitch"));
+
+	}
 	
 	public void toSpawn(Player p) {
 		
 		if (config.contains("Arenas.Spawn." + p.getWorld().getName())) {
 
-			int spawnCount = Config.getC().getConfigurationSection("Arenas.Spawn." + p.getWorld().getName()).getKeys(false).size();
-			String configPrefix = "Arenas.Spawn." + p.getWorld().getName() + "." + r.nextInt(spawnCount);
-			
-			Location spawn = new Location(Bukkit.getWorld(config.getString(configPrefix + ".World")),
-					config.getInt(configPrefix + ".X") + 0.5,
-					config.getInt(configPrefix + ".Y"),
-					config.getInt(configPrefix + ".Z") + 0.5,
-					(float) config.getDouble(configPrefix + ".Yaw"),
-					(float) config.getDouble(configPrefix + ".Pitch"));
-			
-			p.teleport(spawn);
+			p.teleport(getRandomSpawn(p));
 			
 		} else {
 			
