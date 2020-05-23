@@ -9,6 +9,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -52,6 +53,13 @@ public class InventoryListener implements Listener {
             if (item != null) {
 
                 checkAndCancel(e, item);
+
+            }
+
+            // Disable armor clicking/de-equipping
+            if (e.getSlotType().equals(InventoryType.SlotType.ARMOR)) {
+
+                e.setCancelled(true);
 
             }
 
