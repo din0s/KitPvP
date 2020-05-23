@@ -154,6 +154,9 @@ public class DeathListener implements Listener {
 		if (victim.getLastDamageCause() == null && victim.getKiller() != null) {
 			creditWithKill(victim, victim.getKiller());
 			return;
+		} else if (victim.getLastDamageCause() == null) {
+			// suicide?
+			return;
 		}
 
 		DamageCause cause = victim.getLastDamageCause().getCause();
