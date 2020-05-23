@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class SoupCooldowns {
 
-    public static final int COOLDOWN_MINS = 5;
+    public static final int COOLDOWN_MINS = 1;
     private static final long COOLDOWN_MILLIS = 1000 * 60 * COOLDOWN_MINS;
     private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
 
