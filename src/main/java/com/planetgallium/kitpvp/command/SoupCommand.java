@@ -4,13 +4,11 @@ import com.planetgallium.kitpvp.game.Arena;
 import com.planetgallium.kitpvp.game.SoupCooldowns;
 import com.planetgallium.kitpvp.util.Resources;
 import com.planetgallium.kitpvp.util.Toolkit;
-import com.planetgallium.kitpvp.util.XMaterial;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class SoupCommand implements CommandExecutor {
 
@@ -61,11 +59,7 @@ public class SoupCommand implements CommandExecutor {
 
                                 if (econ.has(p, cost)) {
 
-                                    ItemStack soup = new ItemStack(XMaterial.MUSHROOM_STEW.parseItem());
-
-                                    for (int i = 0; i < count; i++) {
-                                        p.getInventory().addItem(soup);
-                                    }
+                                    Toolkit.fillSoup(p, count);
 
                                     econ.withdrawPlayer(p, cost);
                                     arena.getStats().addSoup(p.getUniqueId());

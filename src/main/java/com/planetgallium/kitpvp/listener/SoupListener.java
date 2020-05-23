@@ -60,10 +60,8 @@ public class SoupListener implements Listener {
 									else{
 										count = Config.getI("GiveSoupOnKill.Amount");
 									}
-									
-									for (int r = 0; r < count; r++) {
-										killer.getInventory().addItem(new ItemStack(XMaterial.MUSHROOM_STEW.parseItem()));
-									}
+
+									Toolkit.fillSoup(killer, count);
 									
 								}
 								

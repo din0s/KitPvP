@@ -1,18 +1,29 @@
 package com.planetgallium.kitpvp.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import com.planetgallium.kitpvp.Game;
-
-import me.clip.placeholderapi.PlaceholderAPI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Toolkit {
+
+	public static void fillSoup(Player p, int amt) {
+
+		ItemStack soup = new ItemStack(XMaterial.MUSHROOM_STEW.parseItem());
+		ItemMeta meta = soup.getItemMeta();
+		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aSoup &7(Right Click)"));
+		soup.setItemMeta(meta);
+
+		for (int r = 0; r < amt; r++) {
+			p.getInventory().addItem(soup);
+		}
+
+	}
 	
 	public static boolean inArena(World world) {
 		
