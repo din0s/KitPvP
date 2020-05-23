@@ -31,7 +31,7 @@ public class Arena {
 	
 	private Stats stats;
 	private Kits kits;
-	private KillStreaks killstreaks;
+//	private KillStreaks killstreaks;
 	private Levels levels;
 	private Cooldowns cooldowns;
 	private Random r;
@@ -47,7 +47,7 @@ public class Arena {
 		
 		this.stats = new Stats(plugin, resources);
 		this.kits = new Kits(plugin, this, resources);
-		this.killstreaks = new KillStreaks(resources);
+//		this.killstreaks = new KillStreaks(resources);
 		this.levels = new Levels(this, resources);
 		this.cooldowns = new Cooldowns(this, resources);
 		this.r = new Random();
@@ -94,9 +94,9 @@ public class Arena {
 		
 		getKits().clearKit(p.getName());
 
-		if (Config.getB("Arena.ResetKillStreakOnLeave")) {
-			getKillStreaks().resetStreak(p);
-		}
+//		if (Config.getB("Arena.ResetKillStreakOnLeave")) {
+//			getKillStreaks().resetStreak(p);
+//		}
 		
 //		if (Config.getB("Arena.FancyDeath")) {
 //			p.setHealth(20.0); commenting this out fixes block glitching for some reason
@@ -205,7 +205,7 @@ public class Arena {
 			text = PlaceholderAPI.setPlaceholders(p, text);
 		}
 
-		text = text.replace("%streak%", String.valueOf(this.getKillStreaks().getStreak(p.getName())))
+		text = text //.replace("%streak%", String.valueOf(this.getKillStreaks().getStreak(p.getName())))
 					.replace("%player%", p.getName())
 					.replace("%xp%", String.valueOf(this.getLevels().getExperience(p.getUniqueId())))
 					.replace("%level%", String.valueOf(this.getLevels().getLevel(p.getUniqueId())))
@@ -226,7 +226,7 @@ public class Arena {
 	
 	public Kits getKits() { return kits; }
 	
-	public KillStreaks getKillStreaks() { return killstreaks; }
+//	public KillStreaks getKillStreaks() { return killstreaks; }
 	
 	public Levels getLevels() { return levels; }
 	
