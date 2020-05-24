@@ -45,7 +45,7 @@ public class SoupListener implements Listener {
 							@Override
 							public void run() {
 								
-								if (killer != null) { // incase they logged off
+								if (killer != null && plugin.getArena().getKits().hasKit(killer.getName())) { // incase they logged off or died
 									
 									int count = 0;
 									for (int i = 0; i < 36; i++) {
