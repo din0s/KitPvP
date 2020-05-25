@@ -8,6 +8,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -182,6 +183,18 @@ public class DeathListener implements Listener {
 			broadcast(victim.getWorld(), Config.getS("Death.Messages.Player").replace("%victim%", victim.getName()).replace("%killer%", killerName));
 			creditWithKill(victim, getPlayer(victim, killerName));
 
+		} else if ((cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) && getExplodedEntity(victim.getLastDamageCause()).getType() == EntityType.PRIMED_TNT) {
+
+			String bomberName = getExplodedEntity(victim.getLastDamageCause()).getCustomName();
+
+			if (bomberName != null) {
+
+				Player killer = Toolkit.getPlayer(victim.getWorld(), bomberName);
+				broadcast(victim.getWorld(), Config.getS("Death.Messages.Player").replace("%victim%", victim.getName()).replace("%killer%", bomberName));
+				creditWithKill(victim, killer);
+
+			}
+
 		} else if (cause == DamageCause.VOID) {
 
 			broadcast(victim.getWorld(), Config.getS("Death.Messages.Void").replace("%victim%", victim.getName()));
@@ -197,7 +210,7 @@ public class DeathListener implements Listener {
 		} else if (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) {
 			
 			broadcast(victim.getWorld(), Config.getS("Death.Messages.Explosion").replace("%victim%", victim.getName()));
-			
+
 		} else {
 			
 			broadcast(victim.getWorld(), Config.getS("Death.Messages.Unknown").replace("%victim%", victim.getName()));
@@ -217,9 +230,17 @@ public class DeathListener implements Listener {
 
 	}
 
+	private Entity getExplodedEntity(EntityDamageEvent e) {
+
+		EntityDamageByEntityEvent blownUpEvent = (EntityDamageByEntityEvent) e;
+
+		return blownUpEvent.getDamager();
+
+	}
+
 	private void creditWithKill(Player victim, Player killer) {
 
-		if (killer == null) {
+		if (victim != null && killer != null) {
 			return;
 		}
 
@@ -231,27 +252,31 @@ public class DeathListener implements Listener {
 			econ.depositPlayer(killer, payout);
 			killer.sendMessage(resources.getMessages().getString("Messages.Other.Payout").replace("%player%", victim.getName()).replace("%amount%", String.valueOf(payout)));
 
-			arena.getStats().addKill(killer.getUniqueId());
-			arena.getLevels().addExperience(killer, resources.getLevels().getInt("Levels.General.Experience.Kill"));
+			if (!victim.getName().equals(killer.getName())) {
 
-			Toolkit.runKillCommands(victim, killer);
+				arena.getStats().addKill(killer.getUniqueId());
+				arena.getLevels().addExperience(killer, resources.getLevels().getInt("Levels.General.Experience.Kill"));
 
-			if (resources.getScoreboard().getBoolean("Scoreboard.General.Enabled")) {
+				Toolkit.runKillCommands(victim, killer);
 
-				new BukkitRunnable() {
+				if (resources.getScoreboard().getBoolean("Scoreboard.General.Enabled")) {
 
-					@Override
-					public void run() {
+					new BukkitRunnable() {
 
-						if (killer instanceof Player) {
+						@Override
+						public void run() {
 
-							arena.updateScoreboards(killer, false);
+							if (killer instanceof Player) {
+
+								arena.updateScoreboards(killer, false);
+
+							}
 
 						}
 
-					}
+					}.runTaskLater(Game.getInstance(), 20L);
 
-				}.runTaskLater(Game.getInstance(), 20L);
+				}
 
 			}
 
